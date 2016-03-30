@@ -1,61 +1,56 @@
 $( document ).ready(function() {
-	var scene, camera, renderer;
-	var geometry, material, mesh;
 
-	init();
-	animate();
+	var c = document.getElementById("myCanvas");
+	var canvasCtx = c.getContext("2d");
+	var WIDTH = c.width;
+	var HEIGHT = c.height;
 
-	function init() {
+	console.log(WIDTH);
 
-		scene = new THREE.Scene();
+	navigator.getUserMedia = (navigator.getUserMedia ||
+		navigator.webkitGetUserMedia ||
+		navigator.mozGetUserMedia ||
+		navigator.msGetUserMedia);
 
-		camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-		camera.position.z = 1000;
+	
+	var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-		material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+	var analyser = audioCtx.createAnalyser();
+	var video = document.getElementById("v");
 
-
-		var object;
-
-		object = new THREE.Mesh( new THREE.BoxGeometry( 50, 50, 100 ), material );
-		object.position.set( 0, 0, 200 );
-		scene.add( object );
-
-		object = new THREE.Mesh( new THREE.BoxGeometry( 200, 50, 100 ), material );
-		object.position.set( 500, 0, 200);
-		scene.add( object );
- 		// geometry = new THREE.BoxGeometry( 200, 200, 200 );
-        // material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
-
-		renderer = new THREE.WebGLRenderer();
-		renderer.setSize( window.innerWidth, window.innerHeight );
-
-		document.body.appendChild( renderer.domElement );
-
-	}
-
-	function animate() {
-
-		requestAnimationFrame( animate );
-				render();
-
-		renderer.render( scene, camera );
-
-	}
+	source = audioCtx.createMediaElementSource(video);
+	source.connect(analyser);
+	source.connect(audioCtx.destination);
 
 
-	function render() {
-		var timer = Date.now() * 0.0001;
-				camera.position.x = Math.cos( timer ) * 800;
-				camera.position.z = Math.sin( timer ) * 800;
-				camera.lookAt( scene.position );
-				for ( var i = 0, l = scene.children.length; i < l; i ++ ) {
-					var object = scene.children[ i ];
-					object.rotation.x = timer * 5;
-					object.rotation.y = timer * 2.5;
-				}
-				renderer.render( scene, camera );
 
-	}
+	analyser.fftSize = 256;
+	var bufferLength = analyser.frequencyBinCount;
+	console.log(bufferLength);
+	var dataArray = new Uint8Array(bufferLength);
+
+	canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
+	function draw() {
+		drawVisual = requestAnimationFrame(draw);
+
+		analyser.getByteFrequencyData(dataArray);
+
+		canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+		canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+		var barWidth = (WIDTH / bufferLength);
+		var barHeight;
+		var x = 0;
+		for(var i = 0; i < bufferLength; i++) {
+			barHeight = dataArray[i];
+
+			canvasCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
+			canvasCtx.fillRect(x,HEIGHT-barHeight/2,barWidth,barHeight);
+
+			x += barWidth + 1;
+		}
+	};
+	draw();
 
 });
