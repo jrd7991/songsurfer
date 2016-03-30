@@ -43,9 +43,9 @@ $( document ).ready(function() {
 		var barHeight;
 		var x = 0;
 		for(var i = 0; i < bufferLength; i++) {
-			barHeight = dataArray[i];
+			barHeight = dataArray[i]*2;
 
-			canvasCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
+			canvasCtx.fillStyle = 'hsl('  + Math.floor(360*i/bufferLength)+','+ Math.floor(barHeight*250/HEIGHT) + '%, 50%)';
 			canvasCtx.fillRect(x,HEIGHT-barHeight/2,barWidth,barHeight);
 
 			x += barWidth + 1;
