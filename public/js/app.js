@@ -1,4 +1,9 @@
 $( document ).ready(function() {
+	var arr = ["levels.mp4","helload.mp4"];
+	var vi = 0;
+	$("#button").click(function() {
+		$("#v").attr("src", "songs/" + arr[(vi ^= 1)]); // lol
+	});
 
 	var c = document.getElementById("myCanvas");
 	var canvasCtx = c.getContext("2d");
