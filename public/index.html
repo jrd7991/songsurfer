@@ -7,16 +7,39 @@
   <script src="js/three.min.js"></script>
   <script src="js/jquery-2.2.2.min.js"></script>
   <script src="js/graph3d-min.js"></script>
+    <script src="js/stats.min.js"></script>
     <script src="js/trackball.js"></script>
+    <script src="js/player/build/jquery.js"></script>
+    <script src="js/player/build/mediaelement-and-player.min.js"></script>
+<link rel="stylesheet" href="js/player/build/mediaelementplayer.css" />
+
+  <script src="https://connect.soundcloud.com/sdk/sdk-3.0.0.js"></script>
   <script src="js/app.js"></script>
+
+
 </head>
 
 <body>
-<button id="button">Switch</button>
-<video src="songs/withthem.mp4" id="v" controls></video><br>
+<!-- <button id="button">Switch</button> -->
+<!-- <div id="emb"></div> -->
+<!-- <video src="songs/withthem.mp4" id="v" controls></video><br> -->
+<!-- <iframe width="560" height="315" id="v" src="" frameborder="0" allowfullscreen></iframe> -->
+
+<!-- <video  >
+    <source type="video/youtube" src="https://www.youtube.com/embed/HMUDVMiITOU" />
+</video> -->
+<!-- <video controls="true" width="640" crossorigin="anonymous" height="360" id="v" src="youtube.be/MLeIBFYY6UY"></video> -->
+<!-- <video crossorigin="anonymous" width="640" height="360" id="v" preload="none">
+    <source type="video/youtube" src="http://www.youtube.com/watch?v=HMUDVMiITOU" />
+</video> -->
+<br><br><br><br>
+  <div id="size">2</div><button id="dec">-</button><button id="inc">+</button>
+<audio id="player" controls crossorigin="anonymous"></audio>
+<button id="update">Update</button>
+<input type="text" id="url" size="50" value="">
+<div id="songs"></div>
   <!-- <canvas id="myCanvas" width="800" height="500"> -->
   <div id="container"></div>
-  <div id="size">2.75</div><button id="dec">-</button><button id="inc">+</button>
 </canvas>
 </body>
 </html>
