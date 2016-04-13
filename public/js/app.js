@@ -12,9 +12,21 @@ function onWindowResize() {
 				// render();
 			}
 
-// SC.initialize({
-//   client_id: '6c3507a1755ff1781664a4cc4b5c99c7'
-// });
+function mergeMeshes (meshes) {
+  var combined = new THREE.Geometry();
+
+  for (var i = 0; i < meshes.length; i++) {
+    meshes[i].updateMatrix();
+    combined.merge(meshes[i].geometry, meshes[i].matrix);
+  }
+
+  return combined;
+}
+
+
+SC.initialize({
+  client_id: '6c3507a1755ff1781664a4cc4b5c99c7'
+});
 
 // stream track id 293
 // SC.stream("/tracks/222245726",function(sound){
@@ -121,13 +133,23 @@ camera.position.y = 200;
 renderer.setSize(WIDTH, HEIGHT);
 $container.append(renderer.domElement);
 var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+light.castShadow = false;
 scene.add( light );
 var directionalLight = new THREE.DirectionalLight( 0xffffff, 1);
 directionalLight.position.set( 0, 1, 0 );
+directionalLight.castShadow = false;
 scene.add( directionalLight );
 var directionalLight = new THREE.DirectionalLight( 0xffffff, .15);
+directionalLight.castShadow = false;
 directionalLight.position.set( 0, 0, 1 );
 scene.add( directionalLight );
+
+// object3d.castShadow = false;
+
+// THREE.WebGLRenderer( { antialias: false } )
+
+renderer.shadowMap.enabled = false;
+
 
 	navigator.getUserMedia = (navigator.getUserMedia ||
 		navigator.webkitGetUserMedia ||
@@ -191,7 +213,21 @@ scene.add( directionalLight );
 
 // sphereMaterial.color.setHSL( Math.floor(360)/360.0, 100/100 ,50/100.0);
 	
+
+ 	var logarr = [];
+
+ 	for (var i = 0; i < 3000; i++) {
+ 		logarr.push(getBaseLog(1.047,i));
+ 	}
+
+
+
+
+
 	var boxarr = [];
+
+
+
 
 	var intarr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 34, 35, 37, 39, 41, 43, 45, 47, 49, 51, 54, 56, 59, 62, 65, 68, 71, 74, 78, 82, 86, 90, 94, 98, 103, 108, 113, 118, 124, 130, 136, 142, 149, 156, 163, 171, 179, 187, 196, 205, 215];
 	//, 259, 271, 284, 297, 311, 326, 341, 357, 374, 391, 410, 429, 449, 470, 492]; , 225, 236, 247];
@@ -238,7 +274,7 @@ sphereMaterial.color.setHSL( Math.floor(360*i/intarr.length)/360.0, 100/100 ,50/
 			box.position.x = WIDTH*i/intarr.length;
 			box.position.y = 50;
 			box.position.z = WIDTH*j/intarr.length;
-
+			box.castShadow = false;
 			// add the sphere to the scene
 			
 			scene.add(box);
@@ -249,7 +285,10 @@ sphereMaterial.color.setHSL( Math.floor(360*i/intarr.length)/360.0, 100/100 ,50/
 			// }
 
 			// console.log("HI");
+
+
 		}
+		// mergeMeshes(boxarr2);
 		boxarr.push(boxarr2);
 
 	}
@@ -283,10 +322,13 @@ window.addEventListener( 'resize', onWindowResize, false );
 		newarr = [];
 		for (var n = 0; n < intarr.length-1; n++) {
 			var sum = 0.0;
+
 			var sum2 = 0.0;
 			var ind = intarr[n];
+			var log1 = logarr[ind];
 			for (var k = 0; k < bufferLength; k++) {
-				var val = 1.0/(1+Math.pow(2.71,Math.pow((getBaseLog(1.047,ind)-getBaseLog(1.047,k))/sizeval,2.0)));
+				// var val = 1.0/(1+Math.pow(2.71,Math.pow((log1-logarr[k])/sizeval,2.0)));
+				var val = 0.5/(1+(log1 - logarr[k])*(log1 - logarr[k])/sizeval/sizeval);
 				sum += dataArray[k]*val;
 				sum2 += val;
 			}
